@@ -7,6 +7,11 @@ import axios from 'axios'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
+// Debug: Log API URL (only in browser)
+if (typeof window !== 'undefined') {
+  console.log('API URL:', API_URL)
+}
+
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
@@ -44,9 +49,16 @@ export default function UploadPage() {
       formData.append('file', file)
 
       // Upload file
-      await axios.post(`${API_URL}/upload`, formData, {
+      const response = await axios.post(`${API_URL}/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+        },
+        timeout: 300000, // 5 minute timeout for large files
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            console.log(`Upload progress: ${percentCompleted}%`)
+          }
         },
       })
 
@@ -56,7 +68,22 @@ export default function UploadPage() {
       // Automatically analyze
       handleAnalyze()
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Upload failed')
+      console.error('Upload error:', err)
+      let errorMessage = 'Upload failed'
+      
+      if (err.response) {
+        // Server responded with error
+        errorMessage = err.response.data?.detail || err.response.data?.message || `Server error: ${err.response.status}`
+      } else if (err.request) {
+        // Request made but no response
+        errorMessage = `Cannot connect to server. Please check that ${API_URL} is accessible.`
+      } else if (err.code === 'ECONNABORTED') {
+        errorMessage = 'Upload timeout. The file may be too large or the connection is slow.'
+      } else {
+        errorMessage = err.message || 'Upload failed'
+      }
+      
+      setError(errorMessage)
       setUploading(false)
     }
   }
