@@ -54,6 +54,7 @@ Railway requires **two separate services** - one for backend, one for frontend. 
 3. **Railway will auto-detect:**
    - Python project (from `backend/requirements.txt`)
    - Python version 3.11 (from `backend/runtime.txt`)
+   - Build configuration from `backend/nixpacks.toml` (copies `engine/` and `ai/` directories)
    - Start command from `backend/railway.json`
 
 4. **Set Environment Variables** (in Railway dashboard → Variables tab):

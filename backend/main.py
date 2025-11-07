@@ -10,8 +10,23 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent / ".env")
 
 # Add engine and ai to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "engine"))
-sys.path.insert(0, str(Path(__file__).parent.parent / "ai"))
+# Handle both local development and Railway deployment
+backend_dir = Path(__file__).parent
+
+# Try local paths first (for Railway - engine/ai copied to backend/)
+engine_path = backend_dir / "engine"
+ai_path = backend_dir / "ai"
+
+# If not found, try parent directory (for local development)
+if not engine_path.exists():
+    engine_path = backend_dir.parent / "engine"
+if not ai_path.exists():
+    ai_path = backend_dir.parent / "ai"
+
+if engine_path.exists():
+    sys.path.insert(0, str(engine_path))
+if ai_path.exists():
+    sys.path.insert(0, str(ai_path))
 
 from parser import parse_ericsson_pm_xml
 from rca import analyze_rca
