@@ -26,12 +26,13 @@ Railway will host:
 2. **Add Backend Service**
    - Click "New Service" → "GitHub Repo"
    - Select your repository
-   - Railway will auto-detect it's a Python project
+   - **IMPORTANT**: In service settings, set **Root Directory** to `backend`
+   - Railway will auto-detect it's a Python project from `backend/requirements.txt`
 
 3. **Configure Backend Service**
-   - **Root Directory**: Set to `backend`
+   - **Root Directory**: `backend` (MUST be set in Railway dashboard)
    - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-   - **Python Version**: 3.11
+   - **Python Version**: 3.11 (auto-detected from `runtime.txt` in backend/)
 
 4. **Set Environment Variables** (in Railway dashboard):
    ```
@@ -50,13 +51,14 @@ Railway will host:
 1. **Add Frontend Service**
    - In the same Railway project, click "New Service"
    - Select "GitHub Repo" again (same repo)
-   - Railway will detect it's a Node.js project
+   - **IMPORTANT**: In service settings, set **Root Directory** to `frontend`
+   - Railway will detect it's a Node.js project from `frontend/package.json`
 
 2. **Configure Frontend Service**
-   - **Root Directory**: Set to `frontend`
+   - **Root Directory**: `frontend` (MUST be set in Railway dashboard)
    - **Build Command**: `npm install && npm run build`
    - **Start Command**: `npm start`
-   - **Node Version**: 18+
+   - **Node Version**: 18+ (auto-detected from `package.json`)
 
 3. **Set Environment Variables**:
    ```
