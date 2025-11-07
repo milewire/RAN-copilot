@@ -4,9 +4,16 @@ This guide explains how to deploy both the frontend and backend to Railway.
 
 ## Architecture
 
-Railway will host:
-1. **Backend Service** - FastAPI application
-2. **Frontend Service** - Next.js application
+Railway requires **TWO SEPARATE SERVICES** in the same project:
+
+1. **Backend Service** - FastAPI application (Root Directory: `backend`)
+2. **Frontend Service** - Next.js application (Root Directory: `frontend`)
+
+**Important**: Each service is completely independent with its own:
+- Root directory setting
+- Build process
+- Environment variables
+- Public URL/domain
 
 ## Prerequisites
 
@@ -16,76 +23,135 @@ Railway will host:
 
 ## Deployment Steps
 
-### 1. Deploy Backend
+### Important: Two Separate Services Required
+
+Railway requires **two separate services** - one for backend, one for frontend. Each service has its own root directory setting.
+
+### 1. Create Railway Project
 
 1. **Create New Project on Railway**
+   - Go to https://railway.app
    - Click "New Project"
    - Select "Deploy from GitHub repo"
-   - Choose your repository
+   - Choose your repository: `milewire/pLTE-band41-RCA`
 
-2. **Add Backend Service**
-   - Click "New Service" → "GitHub Repo"
-   - Select your repository
-   - **IMPORTANT**: In service settings, set **Root Directory** to `backend`
-   - Railway will auto-detect it's a Python project from `backend/requirements.txt`
+### 2. Deploy Backend Service
 
-3. **Configure Backend Service**
-   - **Root Directory**: `backend` (MUST be set in Railway dashboard)
-   - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-   - **Python Version**: 3.11 (auto-detected from `runtime.txt` in backend/)
+1. **Add Backend Service**
+   - In your Railway project, click "New Service"
+   - Select "GitHub Repo"
+   - Choose the same repository
+   - **IMPORTANT**: Railway will create a new service
 
-4. **Set Environment Variables** (in Railway dashboard):
+2. **Configure Backend Service Root Directory**
+   - Click on the newly created service
+   - Go to **Settings** tab
+   - Scroll to **Service** section
+   - Find **Root Directory** field
+   - Set it to: `backend` (without quotes)
+   - Click **Save**
+
+3. **Railway will auto-detect:**
+   - Python project (from `backend/requirements.txt`)
+   - Python version 3.11 (from `backend/runtime.txt`)
+   - Start command from `backend/railway.json`
+
+4. **Set Environment Variables** (in Railway dashboard → Variables tab):
    ```
    ALLOW_CLOUD=1
    OPENAI_API_KEY=your-api-key-here
-   CORS_ORIGINS=https://your-frontend.railway.app,http://localhost:3000
-   PORT=8000
+   CORS_ORIGINS=http://localhost:3000
    ```
+   (You'll update CORS_ORIGINS after frontend is deployed - Railway sets PORT automatically)
 
 5. **Deploy**
    - Railway will automatically build and deploy
    - Copy the generated URL (e.g., `https://your-backend.railway.app`)
 
-### 2. Deploy Frontend
+### 3. Deploy Frontend Service
 
-1. **Add Frontend Service**
-   - In the same Railway project, click "New Service"
-   - Select "GitHub Repo" again (same repo)
-   - **IMPORTANT**: In service settings, set **Root Directory** to `frontend`
-   - Railway will detect it's a Node.js project from `frontend/package.json`
+1. **Add Frontend Service** (in the SAME Railway project)
+   - Click "New Service" again
+   - Select "GitHub Repo"
+   - Choose the same repository
+   - **This creates a SECOND service** (separate from backend)
 
-2. **Configure Frontend Service**
-   - **Root Directory**: `frontend` (MUST be set in Railway dashboard)
-   - **Build Command**: `npm install && npm run build`
-   - **Start Command**: `npm start`
-   - **Node Version**: 18+ (auto-detected from `package.json`)
+2. **Configure Frontend Service Root Directory**
+   - Click on the newly created frontend service
+   - Go to **Settings** tab
+   - Scroll to **Service** section
+   - Find **Root Directory** field
+   - Set it to: `frontend` (without quotes)
+   - Click **Save**
 
-3. **Set Environment Variables**:
+3. **Railway will auto-detect:**
+   - Node.js project (from `frontend/package.json`)
+   - Build command: `npm install && npm run build`
+   - Start command from `frontend/railway.json`
+
+4. **Set Environment Variables** (in Railway dashboard → Variables tab):
    ```
    NEXT_PUBLIC_API_URL=https://your-backend.railway.app
    NODE_ENV=production
    ```
+   (Replace with your actual backend URL from step 2)
 
-4. **Deploy**
+5. **Deploy**
    - Railway will build and deploy
    - Copy the generated URL (e.g., `https://your-frontend.railway.app`)
 
-### 3. Update CORS
+### 4. Connect Frontend to Backend
 
-After getting the frontend URL, update the backend's `CORS_ORIGINS` environment variable:
+1. **Get Backend URL**
+   - In Railway dashboard, click on your backend service
+   - Go to **Settings** → **Networking**
+   - Copy the **Public Domain** URL (e.g., `https://your-backend.railway.app`)
+
+2. **Set Frontend Environment Variable**
+   - Click on your frontend service
+   - Go to **Variables** tab
+   - Add/Update variable:
+     ```
+     NEXT_PUBLIC_API_URL=https://your-backend.railway.app
+     NODE_ENV=production
+     ```
+   - Replace `https://your-backend.railway.app` with your actual backend URL
+
+3. **Update Backend CORS**
+   - Get your frontend URL (from frontend service → Settings → Networking)
+   - Go to backend service → **Variables** tab
+   - Update `CORS_ORIGINS`:
+     ```
+     CORS_ORIGINS=https://your-frontend.railway.app,http://localhost:3000
+     ```
+   - Replace with your actual frontend URL
+
+4. **Redeploy Services**
+   - Both services will automatically redeploy when you save environment variables
+   - Or manually trigger redeploy from the **Deployments** tab
+
+## Railway Project Structure
+
+Your Railway project will have **two services**:
+
 ```
-CORS_ORIGINS=https://your-frontend.railway.app,http://localhost:3000
+Railway Project: pLTE-band41-RCA
+├── Service 1: Backend
+│   ├── Root Directory: backend
+│   ├── URL: https://your-backend.railway.app
+│   └── Environment: Python 3.11
+│
+└── Service 2: Frontend
+    ├── Root Directory: frontend
+    ├── URL: https://your-frontend.railway.app
+    └── Environment: Node.js 18+
 ```
 
-Redeploy the backend service.
-
-## Alternative: Single Service (Monorepo)
-
-If you prefer a single service, you can:
-
-1. Use Railway's monorepo support
-2. Deploy backend and frontend as separate services in the same project
-3. Use Railway's internal networking (services can communicate via service names)
+Both services are in the same project but are completely separate deployments with their own:
+- Root directories
+- Environment variables
+- URLs/domains
+- Build processes
 
 ## Environment Variables Summary
 
