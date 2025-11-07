@@ -38,9 +38,13 @@ echo "✓ Verified: engine and ai directories exist"
 echo "Engine contents: $(ls engine/ || echo 'empty')"
 echo "AI contents: $(ls ai/ || echo 'empty')"
 
-# Install dependencies
-echo "Installing Python dependencies..."
-pip install -r requirements.txt
+# Install dependencies (if not already installed by Railway)
+if [ -f "requirements.txt" ]; then
+  echo "Installing Python dependencies..."
+  pip install -r requirements.txt
+else
+  echo "requirements.txt not found, assuming dependencies already installed"
+fi
 
 echo "=== Build completed successfully! ==="
 
