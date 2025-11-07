@@ -355,7 +355,7 @@ export default function HelpPage() {
                 <p className="font-semibold">High Severity</p>
                 <p className="text-sm text-muted-foreground">
                   Critical performance issues requiring immediate attention. 
-                  KPI values are significantly outside thresholds (>20% deviation).
+                  KPI values are significantly outside thresholds (&gt;20% deviation).
                 </p>
               </div>
             </div>
