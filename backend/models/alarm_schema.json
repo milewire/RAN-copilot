@@ -1,0 +1,15 @@
+{
+  "id": "string",
+  "siteId": "string",
+  "cellId": "string",
+  "severity": "string",
+  "alarmName": "string",
+  "specificProblem": "string",
+  "alarmClass": "string",
+  "managedObject": "string",
+  "raisedTime": "string",
+  "clearedTime": "string",
+  "additionalText": "string"
+}
+
+

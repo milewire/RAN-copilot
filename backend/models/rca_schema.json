@@ -1,0 +1,16 @@
+{
+  "siteId": "string",
+  "cellsAffected": ["string"],
+  "timeWindow": {
+    "start": "string",
+    "end": "string"
+  },
+  "severity": "string",
+  "primaryRootCause": "string",
+  "supportingEvidence": ["string"],
+  "likelyCategory": "string",
+  "confidenceScore": "number",
+  "recommendedActions": ["string"]
+}
+
+

@@ -1,0 +1,16 @@
+{
+  "timestamp": "string",
+  "imsi": "string",
+  "imei": "string",
+  "apn": "string",
+  "tac": "number",
+  "cellId": "string",
+  "rsrp": "number",
+  "sinr": "number",
+  "attachResult": "string",
+  "attachCause": "string",
+  "erabEstResult": "string",
+  "erabCause": "string"
+}
+
+

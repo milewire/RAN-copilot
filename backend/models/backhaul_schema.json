@@ -1,0 +1,16 @@
+{
+  "linkId": "string",
+  "fromSite": "string",
+  "toSite": "string",
+  "technology": "string",
+  "timestamp": "string",
+  "modulation": "string",
+  "rssiDbm": "number",
+  "latencyMs": "number",
+  "jitterMs": "number",
+  "txErrors": "number",
+  "rxErrors": "number",
+  "status": "string"
+}
+
+

@@ -1,0 +1,18 @@
+{
+  "siteId": "string",
+  "cellId": "string",
+  "carrier": "string",
+  "timestamp": "string",
+  "rrcSetupSuccessRate": "number",
+  "erabSetupSuccessRate": "number",
+  "callDropRate": "number",
+  "pagingSuccessRate": "number",
+  "ulBler": "number",
+  "dlBler": "number",
+  "avgRsrp": "number",
+  "avgSinr": "number",
+  "prbUtilizationDl": "number",
+  "prbUtilizationUl": "number"
+}
+
+
